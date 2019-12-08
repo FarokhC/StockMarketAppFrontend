@@ -2,7 +2,16 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import { createStore } from 'redux';
+import dataReducer from './Reducers/reducers';
+import servicesModel from './Models/models';
+import TestContainer from './Containers/TestContainer';
+import { Provider } from 'react-redux';
+
+const store = createStore(dataReducer);
+
 function App() {
+  let model = new servicesModel(store);
   return (
     <div className="App">
       <header className="App-header">
@@ -16,8 +25,10 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
         </a>
+        <Provider store = {store}>
+          <TestContainer model = {model}></TestContainer>
+        </Provider>
       </header>
     </div>
   );
