@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
-import { testAction } from '../Actions/actions';
+//import { testAction } from '../Actions/actions';
 import TestComponent from '../Components/TestComponent'
+import StockHomePage from '../Components/StockHomePage'
 
 const mapStateToProps = state => {
     return {
@@ -17,7 +18,7 @@ const mapDispatchToProps = (dispatch, props) => {
 }
 
 const TestContainer = connect(mapStateToProps, mapDispatchToProps) (
-    TestComponent
+    StockHomePage
 );
 
 export default TestContainer;

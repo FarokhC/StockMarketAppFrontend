@@ -6,6 +6,7 @@ import { createStore } from 'redux';
 import dataReducer from './Reducers/reducers';
 import servicesModel from './Models/models';
 import TestContainer from './Containers/TestContainer';
+import StockHomePageContainer from './Containers/StockHomePageContainer';
 import { Provider } from 'react-redux';
 
 const store = createStore(dataReducer);
@@ -15,9 +16,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          STOCK MARKET
         </p>
         <a
           className="App-link"
@@ -26,10 +27,10 @@ function App() {
           rel="noopener noreferrer"
         >
         </a>
-        <Provider store = {store}>
+      </header>
+      <Provider store = {store}>
           <TestContainer model = {model}></TestContainer>
         </Provider>
-      </header>
     </div>
   );
 }
