@@ -144,3 +144,8 @@
   width: 400px;
   /*whatever width you want*/
 }
+
+.form-style-2 input[type="radio"] {
+	margin-top: -1px;
+	vertical-align: middle;
+  }

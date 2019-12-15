@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import dataReducer from './Reducers/reducers';
 import servicesModel from './Models/models';
 import TestContainer from './Containers/TestContainer';
-import StockHomePageContainer from './Containers/StockHomePageContainer';
+// import StockHomePageContainer from './Containers/StockHomePageContainer';
 import { Provider } from 'react-redux';
 
 const store = createStore(dataReducer);
