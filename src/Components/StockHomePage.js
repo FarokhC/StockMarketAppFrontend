@@ -26,16 +26,32 @@ constructor(props) {
     this.setState({value: event.target.value});
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     //this.fetchHelloWorld();
     // alert('A name was submitted: ' + this.state.name);
     // event.preventDefault();
+
+    let strategies = [];
+    if(this.state.ethicalstrategy) {
+      strategies.push("ethical");
+    }
+    if(this.state.growthstrategy) {
+      strategies.push("growth");
+    }
+    if(this.state.indexstrategy) {
+      strategies.push("index");
+    }
+    if(this.state.qualitystrategy) {
+      strategies.push("quality");
+    }
+    if(this.state.valuestrategy) {
+      strategies.push("value");
+    }
+
     var data = JSON.stringify({
       "name": this.state.name,
       "amount": this.state.investamount,
-      "strategies": [
-
-      ]
+      "strategies": strategies
      });
 
      var xhr = new XMLHttpRequest();
@@ -52,7 +68,7 @@ constructor(props) {
      xhr.setRequestHeader("Accept", "*/*");
      // xhr.setRequestHeader("Host", "127.0.0.1:5002");
 
-     xhr.send(data);
+     await xhr.send(data);
      console.log(xhr.response);
   }
 
