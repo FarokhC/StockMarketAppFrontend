@@ -20,11 +20,67 @@ constructor(props) {
     indexstrategy: false,
     qualitystrategy: false,
     valuestrategy: false,
-    bought: {},
   }
 
   handleChange(event) {
     this.setState({value: event.target.value});
+  }
+
+  getHistoryData = (self) => {
+    // var data = JSON.stringify({
+    //   "name": this.state.name,
+    //   "amount": this.state.investamount,
+    //   "strategies": strategies
+    //  });
+
+     var xhr = new XMLHttpRequest();
+     xhr.withCredentials = true;
+
+     xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        console.log(this.responseText);
+      }
+     });
+
+     xhr.open("GET", "http://127.0.0.1:5002/history/" + self.state.name);
+     xhr.setRequestHeader("Content-Type", "application/json");
+     xhr.setRequestHeader("Accept", "*/*");
+     // xhr.setRequestHeader("Host", "127.0.0.1:5002");
+
+     xhr.onreadystatechange = function() {
+        if(xhr.readyState == XMLHttpRequest.DONE) {
+          let response = JSON.parse(xhr.response);
+          console.log(JSON.stringify(response));
+          let history = [];
+          let historyTimestamps = [];
+          for (var key in response) {
+            console.log("key: " + JSON.stringify(key));
+            historyTimestamps.push(key);
+            console.log("value: " + JSON.stringify(response[key]));
+            history.push(response[key]);
+          }
+          self.setState({history: history});
+
+          let historyDates = [];
+          console.log("tiemstaps: " + JSON.stringify(historyTimestamps));
+          // for (var timestamp in historyTimestamps) {
+          //   console.log("time stamp: " + timestamp);
+          //   var date = new Date(timestamp / 1000);
+          //   console.log("date: " + JSON.stringify(date));
+          //   historyDates.push(date);
+          // }
+          let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          historyTimestamps.forEach(timestamp => {
+            console.log(timestamp);
+            let date = new Date(parseInt(timestamp, 10));
+            historyDates.push(months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear());
+          });
+          console.log("historyDates: " + JSON.stringify(historyDates));
+          self.setState({historyDates: historyDates});
+       }
+     }
+
+     xhr.send();
   }
 
   handleSubmit = (event) => {
@@ -73,8 +129,10 @@ constructor(props) {
      xhr.onreadystatechange = function() {
         if(xhr.readyState == XMLHttpRequest.DONE) {
           let response = JSON.parse(xhr.response);
+          self.getHistoryData(self);
           self.setState({bought: response.bought});
           self.setState({cash: response.cash});
+
        }
      }
 
@@ -126,18 +184,27 @@ constructor(props) {
   }
 
   renderHistory = () => {
+    let min = undefined;
+    let max = undefined;
+    if(this.state.history) {
+      min = Math.max.apply(null, this.state.history);
+      max = Math.min.apply(null, this.state.history);
+    }
+
     let option = {
       xAxis: {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-          //data: this.state.trend
+          // data: ['4 Days Ago', '3 Days Ago', '2 Days Ago', '1 days ago', 'Today']
+          data: this.state.historyDates
       },
       yAxis: {
-          type: 'value'
+          type: 'value',
+          min: min,
+          max: max
       },
       series: [{
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-          //data: this.state.price
+          // data: [820, 932, 901, 934, 1290, 1330, 1320],
+          data: this.state.history,
           type: 'line'
       }]
     };
@@ -147,6 +214,9 @@ constructor(props) {
           <ReactEcharts option = {option}/>
         </div>
       );
+    }
+    else if (this.state.bought && !this.state.history){
+      return ("Loading History...");
     }
   }
 
