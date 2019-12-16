@@ -20,13 +20,14 @@ constructor(props) {
     indexstrategy: false,
     qualitystrategy: false,
     valuestrategy: false,
+    bought: {},
   }
 
   handleChange(event) {
     this.setState({value: event.target.value});
   }
 
-  async handleSubmit(event) {
+  handleSubmit = (event) => {
     //this.fetchHelloWorld();
     // alert('A name was submitted: ' + this.state.name);
     // event.preventDefault();
@@ -68,8 +69,16 @@ constructor(props) {
      xhr.setRequestHeader("Accept", "*/*");
      // xhr.setRequestHeader("Host", "127.0.0.1:5002");
 
-     await xhr.send(data);
-     console.log(xhr.response);
+     let self = this;
+     xhr.onreadystatechange = function() {
+        if(xhr.readyState == XMLHttpRequest.DONE) {
+          let response = JSON.parse(xhr.response);
+          self.setState({bought: response.bought});
+          self.setState({cash: response.cash});
+       }
+     }
+
+     xhr.send(data);
   }
 
   fetchHelloWorld() {
@@ -116,7 +125,7 @@ constructor(props) {
     }
   }
 
-  render() {
+  renderHistory = () => {
     let option = {
       xAxis: {
           type: 'category',
@@ -131,7 +140,38 @@ constructor(props) {
           //data: this.state.price
           type: 'line'
       }]
-  };
+    };
+    if(this.state.history) {
+      return(
+        <div >
+          <ReactEcharts option = {option}/>
+        </div>
+      );
+    }
+  }
+
+  getBoughtContents = () => {
+    let result = "";
+
+    for (var key in this.state.bought) {
+      if (this.state.bought.hasOwnProperty(key)) {
+        result += "Stock name: " + key + ", Stock count: " + this.state.bought[key][0] + ", Stock price: " + this.state.bought[key][1] + "\n";
+      }
+    }
+    return result;
+  }
+
+  renderStockRecommendataions = () => {
+    if(this.state.bought) {
+      return (
+          this.getBoughtContents()
+      );
+    }
+    return(<div />);
+  }
+
+  render() {
+
     return (
       <div>
         {/* <div className="form-style-2"> */}
@@ -146,10 +186,13 @@ constructor(props) {
                     <Checkbox value="valuestrategy" checked = {this.state.valuestrategy} onChange={this.onChange}/><b>&nbsp;Value &nbsp;&nbsp;&nbsp;Investing</b> <label></label>
                     <Button variant="contained" onClick = {this.handleSubmit}>Submit</Button>
                 </form>
-            {/* </div> */}
-            <div >
-              <ReactEcharts option = {option}/>
+            <div>
+              {this.renderStockRecommendataions()}
             </div>
+            <div>
+              {this.renderHistory()}
+            </div>
+
          </div>
         );
     }
