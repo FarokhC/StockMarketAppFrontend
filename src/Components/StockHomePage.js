@@ -195,12 +195,18 @@ constructor(props) {
       xAxis: {
           type: 'category',
           // data: ['4 Days Ago', '3 Days Ago', '2 Days Ago', '1 days ago', 'Today']
-          data: this.state.historyDates
+          data: this.state.historyDates,
+          name: "Date",
+          nameLocation: "center",
+          nameGap: "35"
       },
       yAxis: {
           type: 'value',
           min: min,
-          max: max
+          max: max,
+          name: "Portfolio Cost ($)",
+          nameLocation: "center",
+          nameGap: "55"
       },
       series: [{
           // data: [820, 932, 901, 934, 1290, 1330, 1320],
