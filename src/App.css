@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-image: url("stock.jpg");
   min-height: 20vh;
   display: flex;
   flex-direction: column;
@@ -39,6 +39,7 @@
 
 
 .form-style-2{
+  border: 2px solid #ddd;
   max-width: 800px;
   width: 500px;
 	padding: 20px 12px 10px 20px;
