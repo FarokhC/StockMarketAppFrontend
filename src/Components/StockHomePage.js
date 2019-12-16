@@ -2,6 +2,7 @@ import React from 'react';
 //import ReactDOM from 'react-dom';
 // import CurrencyInput from 'react-currency-input';
 import { Checkbox, Button} from '@material-ui/core';
+import ReactEcharts from "echarts-for-react";
 
 class StockHomePage extends React.Component {
 
@@ -52,6 +53,7 @@ constructor(props) {
      // xhr.setRequestHeader("Host", "127.0.0.1:5002");
 
      xhr.send(data);
+     console.log(xhr.response);
   }
 
   fetchHelloWorld() {
@@ -99,8 +101,24 @@ constructor(props) {
   }
 
   render() {
+    let option = {
+      xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          //data: this.state.trend
+      },
+      yAxis: {
+          type: 'value'
+      },
+      series: [{
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          //data: this.state.price
+          type: 'line'
+      }]
+  };
     return (
-        <div className="form-style-2">
+      <div>
+        {/* <div className="form-style-2"> */}
             <div className="form-style-2-heading">Provide your information</div>
                 <form action="" method="post" onSubmit={this.handleSubmit}>
                     <label ><span>Name <span className="required">*</span></span><input type="text" className="input-field" name="field1" onChange={(e) => this.setState({name: e.target.value})} /></label>
@@ -111,9 +129,12 @@ constructor(props) {
                     <Checkbox value="qualitystrategy" checked = {this.state.qualitystrategy} onChange={this.onChange}/><b>&nbsp;Quality Investing</b> <label></label>
                     <Checkbox value="valuestrategy" checked = {this.state.valuestrategy} onChange={this.onChange}/><b>&nbsp;Value &nbsp;&nbsp;&nbsp;Investing</b> <label></label>
                     <Button variant="contained" onClick = {this.handleSubmit}>Submit</Button>
-                    {/* <span> </span><input type="submit" value="Submit" /> <label></label> */}
                 </form>
+            {/* </div> */}
+            <div >
+              <ReactEcharts option = {option}/>
             </div>
+         </div>
         );
     }
 }
