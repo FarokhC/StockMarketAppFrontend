@@ -72,7 +72,30 @@ constructor(props) {
   }
 
   onChange = (e) => {
-    this.setState({[e.target.value] : !this.state[e.target.value]});
+    if(!this.state[e.target.value]) {
+      let count = 0;
+      if(this.state.ethicalstrategy) {
+        count += 1;
+      }
+      if(this.state.growthstrategy) {
+        count += 1;
+      }
+      if(this.state.indexstrategy) {
+        count += 1;
+      }
+      if(this.state.qualitystrategy) {
+        count += 1;
+      }
+      if(this.state.valuestrategy) {
+        count += 1;
+      }
+      if(count <= 1) {
+        this.setState({[e.target.value] : !this.state[e.target.value]});
+      }
+    }
+    else {
+      this.setState({[e.target.value] : !this.state[e.target.value]});
+    }
   }
 
   render() {
