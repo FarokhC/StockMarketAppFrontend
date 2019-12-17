@@ -37,7 +37,7 @@ constructor(props) {
     //   "amount": this.state.investamount,
     //   "strategies": strategies
     //  });
-
+    this.setState({bought: undefined, cash: undefined});
     this.setState({historyDates: undefined, historyTimestamps: undefined, history: undefined});
 
      var xhr = new XMLHttpRequest();
@@ -96,7 +96,7 @@ constructor(props) {
     //this.fetchHelloWorld();
     // alert('A name was submitted: ' + this.state.name);
     // event.preventDefault();
-
+    this.setState({historyDates: undefined, historyTimestamps: undefined, history: undefined});
     this.setState({bought: undefined, cash: undefined});
 
     let strategies = [];
