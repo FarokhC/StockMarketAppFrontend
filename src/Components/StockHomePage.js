@@ -25,6 +25,7 @@ constructor(props) {
     strategyChecked: false,
     isLoadingStocks:false,
     isLoadingHistory:false,
+    isHistoryErr: false,
   }
 
   handleChange(event) {
@@ -39,6 +40,7 @@ constructor(props) {
     //  });
     this.setState({bought: undefined, cash: undefined});
     this.setState({historyDates: undefined, historyTimestamps: undefined, history: undefined});
+    this.setState({ isHistoryErr: false });
 
      var xhr = new XMLHttpRequest();
      xhr.withCredentials = true;
@@ -56,7 +58,11 @@ constructor(props) {
      let self = this;
      xhr.onreadystatechange = function() {
         if(xhr.readyState == XMLHttpRequest.DONE) {
+          debugger;
           let response = JSON.parse(xhr.response);
+          if(response.message === "Internal Server Error") {
+            self.setState({ isHistoryErr: true });
+          }
           console.log(JSON.stringify(response));
           let history = [];
           let historyTimestamps = [];
@@ -167,7 +173,6 @@ constructor(props) {
   }
 
   getCounts = () => {
-    debugger;
     let count = 0;
     if(this.state.ethicalstrategy) {
       count += 1;
@@ -230,14 +235,17 @@ constructor(props) {
           type: 'line'
       }]
     };
-    if(this.state.history) {
+    if(this.state.isHistoryErr) {
+      return ("The entered profile does not exist");
+    }
+    else if(this.state.history) {
       return(
         <div >
           <ReactEcharts option = {option}/>
         </div>
       );
     }
-    if(this.state.isLoadingHistory) {
+    else if(this.state.isLoadingHistory) {
       return (
         "Loading History..."
       )
@@ -316,7 +324,7 @@ constructor(props) {
             </div>
           </div>
        </div>
-         
+
         );
     }
 }
