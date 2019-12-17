@@ -20,18 +20,25 @@ constructor(props) {
     indexstrategy: false,
     qualitystrategy: false,
     valuestrategy: false,
+    validMoney: false,
+    validName: false,
+    strategyChecked: false,
+    isLoadingStocks:false,
+    isLoadingHistory:false,
   }
 
   handleChange(event) {
     this.setState({value: event.target.value});
   }
 
-  getHistoryData = (self) => {
+  getHistoryData = () => {
     // var data = JSON.stringify({
     //   "name": this.state.name,
     //   "amount": this.state.investamount,
     //   "strategies": strategies
     //  });
+
+    this.setState({historyDates: undefined, historyTimestamps: undefined, history: undefined});
 
      var xhr = new XMLHttpRequest();
      xhr.withCredentials = true;
@@ -42,11 +49,11 @@ constructor(props) {
       }
      });
 
-     xhr.open("GET", "http://127.0.0.1:5002/history/" + self.state.name);
+     xhr.open("GET", "http://127.0.0.1:5002/history/" + this.state.name);
      xhr.setRequestHeader("Content-Type", "application/json");
      xhr.setRequestHeader("Accept", "*/*");
      // xhr.setRequestHeader("Host", "127.0.0.1:5002");
-
+     let self = this;
      xhr.onreadystatechange = function() {
         if(xhr.readyState == XMLHttpRequest.DONE) {
           let response = JSON.parse(xhr.response);
@@ -77,8 +84,10 @@ constructor(props) {
           });
           console.log("historyDates: " + JSON.stringify(historyDates));
           self.setState({historyDates: historyDates});
+          self.setState({isLoadingHistory: false});
        }
      }
+    this.setState({isLoadingHistory: true});
 
      xhr.send();
   }
@@ -87,6 +96,8 @@ constructor(props) {
     //this.fetchHelloWorld();
     // alert('A name was submitted: ' + this.state.name);
     // event.preventDefault();
+
+    this.setState({bought: undefined, cash: undefined});
 
     let strategies = [];
     if(this.state.ethicalstrategy) {
@@ -129,13 +140,12 @@ constructor(props) {
      xhr.onreadystatechange = function() {
         if(xhr.readyState == XMLHttpRequest.DONE) {
           let response = JSON.parse(xhr.response);
-          self.getHistoryData(self);
           self.setState({bought: response.bought});
           self.setState({cash: response.cash});
-
+          self.setState({isLoadingStocks: false});
        }
      }
-
+     this.setState({isLoadingStocks: true});
      xhr.send(data);
   }
 
@@ -156,24 +166,30 @@ constructor(props) {
       .catch(err => console.log(err))
   }
 
+  getCounts = () => {
+    debugger;
+    let count = 0;
+    if(this.state.ethicalstrategy) {
+      count += 1;
+    }
+    if(this.state.growthstrategy) {
+      count += 1;
+    }
+    if(this.state.indexstrategy) {
+      count += 1;
+    }
+    if(this.state.qualitystrategy) {
+      count += 1;
+    }
+    if(this.state.valuestrategy) {
+      count += 1;
+    }
+    return count;
+  }
+
   onChange = (e) => {
+    let count = this.getCounts();
     if(!this.state[e.target.value]) {
-      let count = 0;
-      if(this.state.ethicalstrategy) {
-        count += 1;
-      }
-      if(this.state.growthstrategy) {
-        count += 1;
-      }
-      if(this.state.indexstrategy) {
-        count += 1;
-      }
-      if(this.state.qualitystrategy) {
-        count += 1;
-      }
-      if(this.state.valuestrategy) {
-        count += 1;
-      }
       if(count <= 1) {
         this.setState({[e.target.value] : !this.state[e.target.value]});
       }
@@ -221,8 +237,10 @@ constructor(props) {
         </div>
       );
     }
-    else if (this.state.bought && !this.state.history){
-      return ("Loading History...");
+    if(this.state.isLoadingHistory) {
+      return (
+        "Loading History..."
+      )
     }
   }
 
@@ -238,7 +256,12 @@ constructor(props) {
   }
 
   renderStockRecommendataions = () => {
-    if(this.state.bought) {
+    if(this.state.isLoadingStocks) {
+      return (
+        "Loading Stock Recommendations..."
+      )
+    }
+    else if(this.state.bought) {
       return (
           this.getBoughtContents()
       );
@@ -246,21 +269,42 @@ constructor(props) {
     return(<div />);
   }
 
-  render() {
+  updateName = (e) => {
+    if(e.target.value != "") {
+      this.setState({validName: true});
+    }
+    else {
+      this.setState({validName: false});
+    }
+    this.setState({name: e.target.value});
+  }
 
+  updateMoney = (e) => {
+    if(e.target.value < 5000) {
+      this.setState({validMoney: false});
+    }
+    else {
+      this.setState({validMoney: true});
+    }
+    this.setState({investamount: e.target.value});
+  }
+
+  render() {
+    console.log("valid money: " + this.state.validMoney + " stragegyChecked: " +this.state.strategyChecked + " validName: " +this.state.validName);
     return (
       <div>
         {/* <div className="form-style-2"> */}
             <div className="form-style-2-heading">Provide your information</div>
                 <form action="" method="post" onSubmit={this.handleSubmit}>
-                    <label ><span>Name <span className="required">*</span></span><input type="text" className="input-field" name="field1" onChange={(e) => this.setState({name: e.target.value})} /></label>
-                    <label ><span>Money <span className="required">*</span></span><input type="text" className="input-field" investamount="field2" onChange={(e) => this.setState({investamount: e.target.value})} /></label>
+                    <label ><span>Name <span className="required">*</span></span><input type="text" className="input-field" name="field1" onChange={(e) => this.updateName(e)} /></label>
+                    <label ><span>Money <span className="required">*</span></span><input type="number" className="input-field" investamount="field2" onChange={(e) => this.updateMoney(e)} /></label>
                     <Checkbox value="ethicalstrategy" checked = {this.state.ethicalstrategy} onChange={this.onChange}/><b>&nbsp;Ethical Investing</b> <label></label>
                     <Checkbox value="growthstrategy" checked = {this.state.growthstrategy} onChange={this.onChange}/><b>&nbsp;Growth Investing</b> <label></label>
                     <Checkbox value="indexstrategy" checked = {this.state.indexstrategy} onChange={this.onChange}/><b>&nbsp;Index  &nbsp;&nbsp;&nbsp;Investing</b> <label></label>
                     <Checkbox value="qualitystrategy" checked = {this.state.qualitystrategy} onChange={this.onChange}/><b>&nbsp;Quality Investing</b> <label></label>
                     <Checkbox value="valuestrategy" checked = {this.state.valuestrategy} onChange={this.onChange}/><b>&nbsp;Value &nbsp;&nbsp;&nbsp;Investing</b> <label></label>
-                    <Button variant="contained" onClick = {this.handleSubmit}>Submit</Button>
+                    <Button variant="contained" disabled = {!(this.state.validMoney && this.getCounts() > 0 && this.getCounts() <= 2 && this.state.validName)} onClick = {this.handleSubmit}>Submit</Button>
+                    <Button variant="contained" disabled = {!(this.state.validName)} onClick = {this.getHistoryData}>View History</Button>
                 </form>
             <div>
               {this.renderStockRecommendataions()}
