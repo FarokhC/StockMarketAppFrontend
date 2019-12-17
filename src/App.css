@@ -41,16 +41,19 @@
 .form-style-2{
   border: 2px solid #ddd;
   max-width: 800px;
-  width: 500px;
+  margin-top: 70px;
+  height:69%;
+  width: 37%;
 	padding: 20px 12px 10px 20px;
   font: 13px Arial, Helvetica, sans-serif;
   position: fixed;
   top: 50%;
-  left: 50%;
+  left: 22%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
 .form-style-2-heading{
+	
 	font-weight: bold;
 	font-style: italic;
 	border-bottom: 2px solid #ddd;
@@ -147,6 +150,25 @@
 }
 
 .form-style-2 input[type="radio"] {
-	margin-top: -1px;
-	vertical-align: middle;
-  }
+  margin-top: -1px;
+  vertical-align: middle;
+}
+
+.form-style-3{
+	  
+  border: 2px solid #ddd;
+  max-width: 1000px;
+  margin-top:70px;
+  height:69%;
+  width: 53%;
+	padding: 20px 12px 10px 20px;
+  font: 13px Arial, Helvetica, sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 71%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+
+
