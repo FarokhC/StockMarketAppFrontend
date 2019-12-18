@@ -240,7 +240,7 @@ constructor(props) {
 
     for (var key in this.state.bought) {
       if (this.state.bought.hasOwnProperty(key)) {
-        result +=  key + "                                  " + this.state.bought[key][0] + 
+        result +=  key + "                                  " + this.state.bought[key][0] +
         "                                 $" + this.state.bought[key][1] + "\n";
       }
     }
@@ -259,6 +259,17 @@ constructor(props) {
       );
     }
     return(<div />);
+  }
+
+  renderRemainder = () => {
+    if(this.state.cash) {
+      return (
+        "Remainder Cash: $" + this.state.cash.toFixed(2)
+      );
+    }
+    else {
+      return(<div />);
+    }
   }
 
   updateName = (e) => {
@@ -289,7 +300,7 @@ constructor(props) {
             <div className="form-style-2-heading">Please provide your name and choose your investing options</div>
                 <form action="" method="post" onSubmit={this.handleSubmit}>
                     <label ><span>Name <span className="required">*</span></span><input type="text" className="input-field" name="field1" onChange={(e) => this.updateName(e)} /></label>
-                    <label ><span>Money <span className="required">*</span></span><input type="number" className="input-field" investamount="field2" onChange={(e) => this.updateMoney(e)} /></label>
+                    <label ><span>Money ($5000 or more)<span className="required">*</span></span><input type="number" className="input-field" investamount="field2" onChange={(e) => this.updateMoney(e)} /></label>
                     <Checkbox value="ethicalstrategy" checked = {this.state.ethicalstrategy} onChange={this.onChange}/><b>&nbsp;Ethical Investing</b> <label></label>
                     <Checkbox value="growthstrategy" checked = {this.state.growthstrategy} onChange={this.onChange}/><b>&nbsp;Growth Investing</b> <label></label>
                     <Checkbox value="indexstrategy" checked = {this.state.indexstrategy} onChange={this.onChange}/><b>&nbsp;Index  &nbsp;&nbsp;&nbsp;Investing</b> <label></label>
@@ -297,6 +308,7 @@ constructor(props) {
                     <Checkbox value="valuestrategy" checked = {this.state.valuestrategy} onChange={this.onChange}/><b>&nbsp;Value &nbsp;&nbsp;&nbsp;Investing</b> <label></label>
                     <Button variant="contained" disabled = {!(this.state.validMoney && this.getCounts() > 0 && this.getCounts() <= 2 && this.state.validName)} onClick = {this.handleSubmit}>Submit</Button>
                     <Button variant="contained" disabled = {!(this.state.validName) || (this.state.investamount != "")} onClick = {this.getHistoryData}>View History</Button>
+                    <p>In order to View History, only enter the Name</p>
                 </form>
             </div>
         <div className="form-style-3">
@@ -304,6 +316,10 @@ constructor(props) {
             <div className="form-style-2-heading">Name               Number of Stock               Price/Stock</div>
               {this.renderStockRecommendataions()}
             </div>
+            <div>
+              {this.renderRemainder()}
+            </div>
+
             <div >
               {this.renderHistory()}
             </div>
