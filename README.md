@@ -1,3 +1,13 @@
+# Steps to run frontend
+
+* Clone this Repo
+
+* Open terminal and run 'npm install'
+
+* Run 'yarn start'
+
+* Access frontend by using link 'localhost:3000'
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
