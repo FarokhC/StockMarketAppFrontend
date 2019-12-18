@@ -18,7 +18,7 @@ function App() {
       <header className="App-header">
 
         <p>
-          STOCK MARKET
+          SPARTANS STOCK MARKET
         </p>
         <a
           className="App-link"

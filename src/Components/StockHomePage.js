@@ -241,7 +241,7 @@ constructor(props) {
     for (var key in this.state.bought) {
       if (this.state.bought.hasOwnProperty(key)) {
         result +=  key + "                                  " + this.state.bought[key][0] + 
-        "                                 " + this.state.bought[key][1] + "\n";
+        "                                 $" + this.state.bought[key][1] + "\n";
       }
     }
     return result;
@@ -286,7 +286,7 @@ constructor(props) {
     return (
       <div>
          <div className="form-style-2">
-            <div className="form-style-2-heading">Provide your information</div>
+            <div className="form-style-2-heading">Please provide your name and choose your investing options</div>
                 <form action="" method="post" onSubmit={this.handleSubmit}>
                     <label ><span>Name <span className="required">*</span></span><input type="text" className="input-field" name="field1" onChange={(e) => this.updateName(e)} /></label>
                     <label ><span>Money <span className="required">*</span></span><input type="number" className="input-field" investamount="field2" onChange={(e) => this.updateMoney(e)} /></label>
@@ -301,7 +301,7 @@ constructor(props) {
             </div>
         <div className="form-style-3">
             <div >
-            <div className="form-style-2-heading">Name               Number of Stock               Price</div>
+            <div className="form-style-2-heading">Name               Number of Stock               Price/Stock</div>
               {this.renderStockRecommendataions()}
             </div>
             <div >
