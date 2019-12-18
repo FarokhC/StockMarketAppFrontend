@@ -155,23 +155,6 @@ constructor(props) {
      xhr.send(data);
   }
 
-  fetchHelloWorld() {
-    console.log("fetching python localhost");
-    fetch('http://localhost:5002/stocks', {
-      method: 'GET',
-      //mode:'cors',
-      dataType: 'json'
-    })
-      .then(r => r.json())
-      .then(r => {
-        console.log(r)
-        this.setState({
-          name: r
-        })
-      })
-      .catch(err => console.log(err))
-  }
-
   getCounts = () => {
     let count = 0;
     if(this.state.ethicalstrategy) {
@@ -257,7 +240,8 @@ constructor(props) {
 
     for (var key in this.state.bought) {
       if (this.state.bought.hasOwnProperty(key)) {
-        result += "Stock name: " + key + ", Stock count: " + this.state.bought[key][0] + ", Stock price: " + this.state.bought[key][1] + "\n";
+        result +=  key + "                                  " + this.state.bought[key][0] + 
+        "                                 " + this.state.bought[key][1] + "\n";
       }
     }
     return result;
@@ -312,11 +296,12 @@ constructor(props) {
                     <Checkbox value="qualitystrategy" checked = {this.state.qualitystrategy} onChange={this.onChange}/><b>&nbsp;Quality Investing</b> <label></label>
                     <Checkbox value="valuestrategy" checked = {this.state.valuestrategy} onChange={this.onChange}/><b>&nbsp;Value &nbsp;&nbsp;&nbsp;Investing</b> <label></label>
                     <Button variant="contained" disabled = {!(this.state.validMoney && this.getCounts() > 0 && this.getCounts() <= 2 && this.state.validName)} onClick = {this.handleSubmit}>Submit</Button>
-                    <Button variant="contained" disabled = {!(this.state.validName)} onClick = {this.getHistoryData}>View History</Button>
+                    <Button variant="contained" disabled = {!(this.state.validName) || (this.state.investamount != "")} onClick = {this.getHistoryData}>View History</Button>
                 </form>
             </div>
         <div className="form-style-3">
             <div >
+            <div className="form-style-2-heading">Name               Number of Stock               Price</div>
               {this.renderStockRecommendataions()}
             </div>
             <div >

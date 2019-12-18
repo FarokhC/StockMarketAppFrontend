@@ -170,5 +170,11 @@
   transform: translate(-50%, -50%);
 }
 
-
+td{
+	border:1px solid #ccc;
+  }
+  div {
+	white-space: pre-wrap;
+	text-align: center;
+  } 
 
